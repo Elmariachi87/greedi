@@ -4,6 +4,7 @@ const searchBtn = document.getElementById("search-btn");
 const mealList = document.getElementById("meal");
 const mealDetailsContent = document.querySelector(".meal-details-content");
 const recipeCloseBtn = document.getElementById("recipe-close-btn");
+const searchBar = document.querySelector(".meal-search-box");
 
 // EVENT LISTENERS
 
@@ -13,10 +14,19 @@ recipeCloseBtn.addEventListener("click", () => {
   mealDetailsContent.parentElement.classList.remove("showRecipe");
 });
 
+searchBar.addEventListener("keydown", function (e) {
+  console.log(e);
+  if (e.code === "Enter") {
+    // e.preventDefault();
+    getMealList();
+    // document.querySelector("search-btn").click();
+  }
+});
+
 // ===== GET MEAL =====
 // Get meal list that matches with ingredients
 function getMealList() {
-  // .value returns the value (not sure why needed) .trim removes white space
+  // .value returns the value .trim removes white space
   let searchInputTxt = document.getElementById("search-input").value.trim();
   fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInputTxt}
 `)
@@ -25,7 +35,7 @@ function getMealList() {
       let html = "";
       if (data.meals) {
         data.meals.forEach((meal) => {
-          // html becomes a whole nest of Divs, with the link, pic etc being determined by the URL
+          // html becomes a whole nest of divs, with the link, pic etc being determined by the URL
           html += `
             <div class="meal-item" data-id="${meal.idMeal}">
                 <div class="meal-img">
@@ -77,7 +87,7 @@ function mealRecipeModal(meal) {
         <p>${meal.strInstructions}</p>
     </div>
     <div class="recipe-meal-img">
-        <img src="food.jpg" alt="food from your search result">
+        <img src="${meal.strMealThumb}" alt="food from your search result">
     </div>
     <div class="recipe-link">
         <a href="${meal.strYoutube}" target="_blank">Watch video</a>
